@@ -10298,7 +10298,7 @@ async function _generatePaymentReceiptPDF(d) {
   });
 
   page.drawText('Thor Training · La Catedral de la Fuerza',                { x: 40, y: 28, size: 9, font, color: gray });
-  page.drawText('Diagonal 29 # 34A sur - 26, Cali · thortraininggym.club', { x: 40, y: 16, size: 8, font, color: gray });
+  page.drawText('Diagonal 29 # 34A sur - 26, Envigado · thortraininggym.club', { x: 40, y: 16, size: 8, font, color: gray });
 
   return pdfDoc.save();
 }
@@ -10540,10 +10540,20 @@ async function registrarPagoManual() {
     // manejo del retorno del checkout llaman send-whatsapp-message) — no comparte
     // estado con ninguno de los dos, solo la función de envío, y le pasa el monto de
     // forma explícita en vez de leerlo del campo #wa-monto de la otra página.
+    // La plantilla aprobada en Meta solo tiene 2 parámetros ({{1}} nombre, {{2}} monto)
+    // — agregar un tercero (vigencia) requeriría editar la plantilla en Meta Business
+    // Manager y esperar su re-aprobación, algo que no se puede hacer desde acá. Mientras
+    // tanto, la vigencia va empaquetada dentro del mismo parámetro de monto (pedido de
+    // Andrea/María Paulina, 2026-08-27: el WhatsApp debe decir de qué fecha a qué fecha
+    // queda vigente, no solo el monto) — de paso corrige que antes se mandaba el número
+    // crudo sin formato de moneda (ej. "150000" en vez de "$150.000").
+    const waStartStr = _formatDate(updated.startDate, { day: 'numeric', month: 'short', year: 'numeric' });
+    const waMontoConVigencia = `${_formatCOPFull(monto)} (vigente del ${waStartStr} al ${newEndStr})`;
+
     let waWarning = '';
     try {
       const waResult = await _sendWhatsappTemplateDetailed(
-        'confirmacion_pago', { name: updated.name, phone: updated.phone }, null, null, null, monto
+        'confirmacion_pago', { name: updated.name, phone: updated.phone }, null, null, null, waMontoConVigencia
       );
       if (!waResult.success) waWarning = ' · ⚠️ WhatsApp no enviado';
     } catch (_) {
