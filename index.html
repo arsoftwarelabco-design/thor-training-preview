@@ -1,0 +1,1644 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Thor Training · El Búnker de la Fuerza</title>
+  <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Barlow+Condensed:wght@400;600;700&family=Outfit:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+  <link rel="icon" type="image/png" href="img/favicon.png">
+  <style>
+    :root {
+      --cyan: #00CFFF;
+      --cyan2: #00AFDF;
+      --cyan-dim: rgba(0,207,255,0.12);
+      --cyan-glow: 0 0 30px rgba(0,207,255,0.5), 0 0 80px rgba(0,207,255,0.2);
+      --cyan-glow-sm: 0 0 12px rgba(0,207,255,0.35);
+      --black: #0A0A0A;
+      --dark: #0D0D0D;
+      --card: #111111;
+      --card2: #141414;
+      --border: #1A1A1A;
+      --border2: #252525;
+      --muted: #555;
+      --muted2: #999;
+      --white: #FFFFFF;
+    }
+
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Outfit', sans-serif;
+      background: var(--black);
+      color: var(--white);
+      overflow-x: hidden;
+    }
+
+    /* scanline */
+    body::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      background: repeating-linear-gradient(0deg, transparent, transparent 2px, rgba(0,0,0,0.025) 2px, rgba(0,0,0,0.025) 4px);
+      pointer-events: none;
+      z-index: 9000;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: fixed;
+      top: 0; left: 0; right: 0;
+      z-index: 100;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 18px 48px;
+      background: rgba(10,10,10,0.85);
+      backdrop-filter: blur(12px);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .nav-logo {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      text-decoration: none;
+    }
+
+    .nav-logo img {
+      height: 36px;
+      width: auto;
+      mix-blend-mode: screen;
+    }
+
+    .nav-wordmark {
+      display: flex;
+      flex-direction: column;
+      line-height: 1;
+    }
+
+    .nav-thor {
+      font-weight: 800;
+      font-size: 16px;
+      letter-spacing: 3px;
+      color: var(--white);
+    }
+
+    .nav-training {
+      font-weight: 400;
+      font-size: 8px;
+      letter-spacing: 0.4em;
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow-sm);
+      text-transform: uppercase;
+    }
+
+    .nav-actions {
+      display: flex;
+      align-items: center;
+      gap: 16px;
+    }
+
+    .btn-nav-wa {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 9px 18px;
+      border-radius: 8px;
+      border: 1px solid var(--border2);
+      color: var(--muted2);
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .btn-nav-wa:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+    }
+
+    .btn-nav-login {
+      padding: 9px 22px;
+      border-radius: 8px;
+      background: var(--cyan);
+      color: var(--black);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.2s;
+      box-shadow: var(--cyan-glow-sm);
+    }
+
+    .btn-nav-login:hover {
+      background: #00e5ff;
+      box-shadow: var(--cyan-glow);
+      transform: translateY(-1px);
+    }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 100px 48px 80px;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .hero-bg {
+      position: absolute;
+      inset: 0;
+      background:
+        radial-gradient(ellipse 60% 70% at 20% 50%, rgba(0,207,255,0.10) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 40% at 80% 20%, rgba(0,175,223,0.06) 0%, transparent 60%);
+    }
+
+    .hero-grid {
+      position: absolute;
+      inset: 0;
+      background-image:
+        linear-gradient(rgba(0,207,255,0.04) 1px, transparent 1px),
+        linear-gradient(90deg, rgba(0,207,255,0.04) 1px, transparent 1px);
+      background-size: 60px 60px;
+      mask-image: radial-gradient(ellipse 70% 80% at 20% 50%, black 20%, transparent 80%);
+    }
+
+    .hero-inner {
+      position: relative;
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 64px;
+      align-items: center;
+      width: 100%;
+      max-width: 1200px;
+    }
+
+    .hero-content {
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 16px;
+      border-radius: 100px;
+      border: 1px solid rgba(0,207,255,0.3);
+      background: rgba(0,207,255,0.08);
+      font-size: 11px;
+      font-weight: 600;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 28px;
+    }
+
+    .hero-badge::before {
+      content: '';
+      width: 6px; height: 6px;
+      border-radius: 50%;
+      background: var(--cyan);
+      box-shadow: var(--cyan-glow-sm);
+      animation: pulse 2s infinite;
+    }
+
+    @keyframes pulse {
+      0%, 100% { opacity: 1; transform: scale(1); }
+      50% { opacity: 0.5; transform: scale(0.8); }
+    }
+
+    .hero-headline {
+      font-size: clamp(44px, 6vw, 88px);
+      font-weight: 900;
+      line-height: 0.92;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      margin-bottom: 10px;
+    }
+
+    .hero-headline span {
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow);
+    }
+
+    .hero-sub {
+      font-size: clamp(14px, 1.8vw, 20px);
+      font-weight: 400;
+      letter-spacing: 5px;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-bottom: 28px;
+    }
+
+    .hero-desc {
+      font-size: 16px;
+      font-weight: 400;
+      color: var(--muted2);
+      line-height: 1.7;
+      margin-bottom: 40px;
+      max-width: 480px;
+    }
+
+    .hero-ctas {
+      display: flex;
+      align-items: center;
+      gap: 14px;
+      flex-wrap: wrap;
+      margin-bottom: 52px;
+    }
+
+    .btn-hero-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 32px;
+      border-radius: 10px;
+      background: var(--cyan);
+      color: var(--black);
+      font-size: 14px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      box-shadow: var(--cyan-glow-sm);
+    }
+
+    .btn-hero-primary:hover {
+      background: #00e5ff;
+      box-shadow: var(--cyan-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn-hero-secondary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 15px 32px;
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      color: var(--white);
+      font-size: 14px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+
+    .btn-hero-secondary:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      transform: translateY(-2px);
+    }
+
+    .hero-stats {
+      display: flex;
+      align-items: center;
+      gap: 36px;
+    }
+
+    .stat { text-align: left; }
+
+    .stat-num {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow-sm);
+      line-height: 1;
+    }
+
+    .stat-label {
+      font-size: 10px;
+      font-weight: 500;
+      color: var(--muted2);
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-top: 4px;
+    }
+
+    .stat-divider {
+      width: 1px;
+      height: 36px;
+      background: var(--border2);
+      flex-shrink: 0;
+    }
+
+    /* ── HERO VISUAL ── */
+    .hero-visual {
+      position: relative;
+      height: 580px;
+    }
+
+    .hero-img-wrap {
+      position: absolute;
+      inset: 0;
+      border-radius: 20px;
+      overflow: hidden;
+      border: 1px solid rgba(0,207,255,0.18);
+      box-shadow: 0 0 0 1px rgba(0,207,255,0.06), 0 32px 80px rgba(0,0,0,0.6);
+    }
+
+    .hero-img-wrap img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center;
+      filter: brightness(0.82) contrast(1.05);
+      display: block;
+    }
+
+    /* fade izquierda para fundir con el fondo negro */
+    .hero-img-wrap::before {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(90deg, var(--black) 0%, transparent 30%);
+      z-index: 1;
+      border-radius: inherit;
+    }
+
+    /* overlay de color de marca sutil en la parte inferior */
+    .hero-img-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(180deg, transparent 55%, rgba(0,10,15,0.75) 100%);
+      z-index: 1;
+      border-radius: inherit;
+    }
+
+    /* etiqueta flotante sobre la imagen */
+    .hero-img-tag {
+      position: absolute;
+      bottom: 24px;
+      right: 24px;
+      z-index: 2;
+      padding: 10px 18px;
+      background: rgba(10,10,10,0.88);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(0,207,255,0.25);
+      border-radius: 10px;
+      font-size: 12px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+    }
+
+    /* línea cyan vertical decorativa a la izquierda de la imagen */
+    .hero-visual::before {
+      content: '';
+      position: absolute;
+      left: -20px;
+      top: 10%;
+      height: 80%;
+      width: 2px;
+      background: linear-gradient(180deg, transparent, var(--cyan), transparent);
+      opacity: 0.5;
+      border-radius: 2px;
+    }
+
+    /* ── HERO CAROUSEL ── */
+    .hero-carousel { position: relative; width: 100%; height: 100%; }
+
+    .hero-slide {
+      position: absolute;
+      inset: 0;
+      opacity: 0;
+      transition: opacity 0.9s ease;
+    }
+    .hero-slide.active { opacity: 1; }
+
+    .hero-dots {
+      position: absolute;
+      bottom: 24px;
+      left: 20px;
+      z-index: 3;
+      display: flex;
+      gap: 8px;
+      align-items: center;
+    }
+
+    .hero-dot {
+      width: 7px;
+      height: 7px;
+      border-radius: 4px;
+      background: rgba(255,255,255,0.25);
+      border: none;
+      cursor: pointer;
+      padding: 0;
+      transition: all 0.35s;
+    }
+
+    .hero-dot.active {
+      background: var(--cyan);
+      box-shadow: 0 0 8px rgba(0,207,255,0.5);
+      width: 22px;
+    }
+
+    .hero-arrow {
+      position: absolute;
+      top: 50%;
+      transform: translateY(-50%);
+      z-index: 3;
+      width: 36px;
+      height: 36px;
+      border-radius: 50%;
+      background: rgba(10,10,10,0.55);
+      backdrop-filter: blur(10px);
+      border: 1px solid rgba(255,255,255,0.12);
+      color: var(--white);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      transition: all 0.2s;
+      opacity: 0;
+      pointer-events: none;
+    }
+
+    .hero-visual:hover .hero-arrow {
+      opacity: 1;
+      pointer-events: auto;
+    }
+
+    .hero-arrow:hover {
+      background: rgba(0,207,255,0.15);
+      border-color: rgba(0,207,255,0.35);
+      color: var(--cyan);
+    }
+
+    .hero-arrow-prev { left: 12px; }
+    .hero-arrow-next { right: 12px; }
+
+    /* ── SECTIONS ── */
+    section {
+      padding: 100px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .section-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 3px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 16px;
+    }
+
+    .section-title {
+      font-size: clamp(32px, 4vw, 52px);
+      font-weight: 800;
+      line-height: 1.05;
+      letter-spacing: -1px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .section-desc {
+      font-size: 16px;
+      color: var(--muted2);
+      line-height: 1.7;
+      max-width: 520px;
+    }
+
+    /* ── PROPOSITO ── */
+    .purpose-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .purpose-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 80px;
+      align-items: center;
+    }
+
+    .purpose-cards {
+      display: flex;
+      flex-direction: column;
+      gap: 16px;
+    }
+
+    .purpose-card {
+      padding: 24px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      transition: border-color 0.2s;
+    }
+
+    .purpose-card:hover {
+      border-color: rgba(0,207,255,0.2);
+    }
+
+    .purpose-card-icon {
+      margin-bottom: 10px;
+      color: var(--cyan);
+      display: flex;
+      align-items: center;
+    }
+
+    .purpose-card-title {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 8px;
+    }
+
+    .purpose-card-text {
+      font-size: 14px;
+      color: var(--muted2);
+      line-height: 1.6;
+    }
+
+    /* ── CLASES ── */
+    .clases-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .clases-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-end;
+      margin-bottom: 48px;
+      flex-wrap: wrap;
+      gap: 24px;
+    }
+
+    .clases-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .clase-card {
+      padding: 32px 24px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      position: relative;
+      overflow: hidden;
+      transition: all 0.25s;
+      cursor: default;
+    }
+
+    .clase-card::before {
+      content: '';
+      position: absolute;
+      top: 0; left: 0; right: 0;
+      height: 2px;
+      background: var(--cyan);
+      transform: scaleX(0);
+      transform-origin: left;
+      transition: transform 0.3s;
+    }
+
+    .clase-card:hover {
+      border-color: rgba(0,207,255,0.25);
+      transform: translateY(-4px);
+      box-shadow: 0 20px 40px rgba(0,0,0,0.4);
+    }
+
+    .clase-card:hover::before {
+      transform: scaleX(1);
+    }
+
+    .clase-icon {
+      margin-bottom: 16px;
+      display: block;
+      color: var(--cyan);
+    }
+
+    .clase-name {
+      font-size: 18px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 8px;
+    }
+
+    .clase-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.5;
+    }
+
+    /* ── CYCLING BAND ── */
+    .cycling-band {
+      position: relative;
+      width: 100%;
+      height: 540px;
+      overflow: hidden;
+    }
+
+    .cycling-band-img {
+      position: absolute;
+      inset: 0;
+      background: url('img/cycling.png') center / cover no-repeat;
+      filter: brightness(0.6) contrast(1.08) saturate(0.9);
+      transform: scale(1.04);
+      transition: transform 8s ease;
+    }
+
+    .cycling-band:hover .cycling-band-img {
+      transform: scale(1.0);
+    }
+
+    .cycling-band-overlay {
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(90deg, rgba(10,10,10,0.92) 0%, rgba(10,10,10,0.5) 45%, rgba(10,10,10,0.2) 100%),
+        linear-gradient(180deg, rgba(10,10,10,0.3) 0%, transparent 30%, transparent 60%, rgba(10,10,10,0.7) 100%);
+    }
+
+    .cycling-band-content {
+      position: relative;
+      z-index: 2;
+      height: 100%;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      padding: 0 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .cycling-band-label {
+      font-size: 11px;
+      font-weight: 700;
+      letter-spacing: 4px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 20px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .cycling-band-label::before {
+      content: '';
+      width: 32px;
+      height: 2px;
+      background: var(--cyan);
+      box-shadow: var(--cyan-glow-sm);
+      border-radius: 2px;
+    }
+
+    .cycling-band-title {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 900;
+      line-height: 0.9;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      margin-bottom: 20px;
+    }
+
+    .cycling-band-title span {
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow);
+    }
+
+    .cycling-band-sub {
+      font-size: 16px;
+      color: var(--muted2);
+      max-width: 420px;
+      line-height: 1.6;
+      margin-bottom: 36px;
+    }
+
+    .btn-cycling {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 14px 30px;
+      border-radius: 10px;
+      border: 1px solid rgba(0,207,255,0.5);
+      background: rgba(0,207,255,0.08);
+      color: var(--cyan);
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      text-decoration: none;
+      transition: all 0.25s;
+      align-self: flex-start;
+    }
+
+    .btn-cycling:hover {
+      background: var(--cyan);
+      color: var(--black);
+      box-shadow: var(--cyan-glow-sm);
+      transform: translateY(-2px);
+    }
+
+    /* ── HORARIOS ── */
+    .horarios-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .horarios-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 24px;
+      margin-top: 48px;
+    }
+
+    .horario-card {
+      padding: 32px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      gap: 24px;
+    }
+
+    .horario-icon {
+      flex-shrink: 0;
+      color: var(--cyan);
+    }
+
+    .horario-days {
+      font-size: 13px;
+      font-weight: 700;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      color: var(--muted2);
+      margin-bottom: 6px;
+    }
+
+    .horario-time {
+      font-size: 28px;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow-sm);
+      line-height: 1;
+    }
+
+    .horario-note {
+      font-size: 12px;
+      color: var(--muted);
+      margin-top: 6px;
+    }
+
+    .horario-closed {
+      padding: 20px 32px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      grid-column: span 3;
+    }
+
+    .horario-closed-label {
+      font-size: 12px;
+      color: var(--muted);
+    }
+
+    /* ── PLANES ── */
+    .planes-section {
+      border-top: 1px solid var(--border);
+    }
+
+    .planes-header {
+      margin-bottom: 48px;
+    }
+
+    .planes-grid {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 20px;
+    }
+
+    .plan-card {
+      padding: 28px 24px;
+      border-radius: 14px;
+      border: 1px solid var(--border);
+      background: var(--card);
+      position: relative;
+      transition: all 0.25s;
+    }
+
+    .plan-card:hover {
+      border-color: rgba(0,207,255,0.2);
+      transform: translateY(-4px);
+    }
+
+    .plan-card.featured {
+      border-color: rgba(0,207,255,0.4);
+      background: linear-gradient(160deg, rgba(0,207,255,0.06) 0%, var(--card) 60%);
+    }
+
+    .plan-badge {
+      display: inline-block;
+      padding: 3px 10px;
+      border-radius: 100px;
+      background: var(--cyan);
+      color: var(--black);
+      font-size: 9px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-transform: uppercase;
+      margin-bottom: 16px;
+    }
+
+    .plan-name {
+      font-size: 16px;
+      font-weight: 800;
+      letter-spacing: 1px;
+      text-transform: uppercase;
+      margin-bottom: 6px;
+    }
+
+    .plan-price {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow-sm);
+      line-height: 1;
+      margin-bottom: 4px;
+    }
+
+    .plan-period {
+      font-size: 12px;
+      color: var(--muted2);
+      margin-bottom: 16px;
+    }
+
+    .plan-desc {
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.55;
+      padding-top: 16px;
+      border-top: 1px solid var(--border);
+    }
+
+    .plan-check {
+      color: var(--cyan);
+      margin-right: 6px;
+    }
+
+    /* ── CTA FINAL ── */
+    .cta-section {
+      border-top: 1px solid var(--border);
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .cta-bg {
+      position: absolute;
+      inset: 0;
+      background: radial-gradient(ellipse 60% 80% at 50% 50%, rgba(0,207,255,0.08) 0%, transparent 70%);
+    }
+
+    .cta-content {
+      position: relative;
+    }
+
+    .cta-title {
+      font-size: clamp(40px, 6vw, 80px);
+      font-weight: 900;
+      letter-spacing: -2px;
+      text-transform: uppercase;
+      line-height: 0.9;
+      margin-bottom: 24px;
+    }
+
+    .cta-title span {
+      color: var(--cyan);
+      text-shadow: var(--cyan-glow);
+    }
+
+    .cta-sub {
+      font-size: 16px;
+      color: var(--muted2);
+      margin-bottom: 40px;
+    }
+
+    .cta-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+
+    .btn-cta-primary {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 44px;
+      border-radius: 10px;
+      background: var(--cyan);
+      color: var(--black);
+      font-size: 15px;
+      font-weight: 800;
+      letter-spacing: 1.5px;
+      text-decoration: none;
+      text-transform: uppercase;
+      transition: all 0.25s;
+      box-shadow: var(--cyan-glow-sm);
+    }
+
+    .btn-cta-primary:hover {
+      background: #00e5ff;
+      box-shadow: var(--cyan-glow);
+      transform: translateY(-2px);
+    }
+
+    .btn-cta-wa {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 18px 36px;
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      color: var(--white);
+      font-size: 15px;
+      font-weight: 600;
+      text-decoration: none;
+      transition: all 0.25s;
+    }
+
+    .btn-cta-wa:hover {
+      border-color: #25D366;
+      color: #25D366;
+      transform: translateY(-2px);
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: #060b12;
+      border-top: 1px solid #1e2a3a;
+    }
+
+    .footer-main {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr 1.6fr;
+      gap: 48px;
+      padding: 60px 48px 40px;
+      max-width: 1200px;
+      margin: 0 auto;
+    }
+
+    .footer-logo-row {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 14px;
+      text-decoration: none;
+    }
+
+    .footer-logo-name {
+      font-family: 'Bebas Neue', sans-serif;
+      font-size: 28px;
+      letter-spacing: 3px;
+      color: var(--white);
+      line-height: 1;
+    }
+
+    .footer-logo-name span {
+      color: var(--cyan);
+    }
+
+    .footer-tagline {
+      font-size: 12px;
+      color: var(--muted2);
+      line-height: 1.65;
+      margin: 0 auto 24px;
+      max-width: 220px;
+    }
+
+    .footer-social {
+      display: flex;
+      gap: 10px;
+    }
+
+    .footer-social-link {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      width: 38px;
+      height: 38px;
+      border-radius: 10px;
+      border: 1px solid var(--border2);
+      color: var(--muted2);
+      text-decoration: none;
+      transition: all 0.2s;
+    }
+
+    .footer-social-link:hover {
+      border-color: var(--cyan);
+      color: var(--cyan);
+      background: rgba(0,207,255,0.06);
+    }
+
+    .footer-nav-title,
+    .footer-contact-title {
+      font-size: 10px;
+      font-weight: 700;
+      letter-spacing: 2.5px;
+      text-transform: uppercase;
+      color: var(--cyan);
+      margin-bottom: 20px;
+    }
+
+    .footer-nav-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+    }
+
+    .footer-nav-list a {
+      font-size: 13px;
+      color: var(--muted2);
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-nav-list a:hover {
+      color: var(--white);
+    }
+
+    .footer-contact-list {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      margin-bottom: 20px;
+    }
+
+    .footer-contact-item {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      font-size: 13px;
+      color: var(--muted2);
+      line-height: 1.5;
+    }
+
+    .footer-contact-item svg {
+      flex-shrink: 0;
+      margin-top: 2px;
+      color: var(--cyan);
+    }
+
+    .footer-contact-item a {
+      color: inherit;
+      text-decoration: none;
+      transition: color 0.2s;
+    }
+
+    .footer-contact-item a:hover {
+      color: var(--white);
+    }
+
+    .footer-map {
+      border-radius: 10px;
+      overflow: hidden;
+      border: 1px solid #1e2a3a;
+    }
+
+    .footer-map iframe {
+      display: block;
+      width: 100%;
+      height: 140px;
+      filter: grayscale(80%) invert(90%) hue-rotate(180deg);
+      opacity: 0.85;
+    }
+
+    .footer-bottom {
+      border-top: 1px solid #1e2a3a;
+      padding: 20px 48px;
+      max-width: 1200px;
+      margin: 0 auto;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      flex-wrap: wrap;
+      gap: 12px;
+    }
+
+    .footer-copy {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-credit {
+      font-size: 11px;
+      color: var(--muted);
+    }
+
+    .footer-credit .heart {
+      color: #2D95CC;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 1024px) {
+      .hero { padding: 100px 32px 72px; }
+      .hero-inner { gap: 40px; }
+      .hero-visual { height: 480px; }
+    }
+
+    @media (max-width: 900px) {
+      nav { padding: 16px 24px; }
+      .btn-nav-wa { display: none; }
+
+      section { padding: 72px 24px; }
+
+      .hero { padding: 100px 24px 72px; }
+      .hero-inner { grid-template-columns: 1fr; }
+      .hero-content { align-items: center; text-align: center; }
+      .hero-desc { text-align: center; }
+      .hero-ctas { justify-content: center; }
+      .hero-stats { justify-content: center; }
+      .hero-visual { display: none; }
+
+      .purpose-grid { grid-template-columns: 1fr; gap: 40px; }
+      .clases-grid { grid-template-columns: repeat(2, 1fr); }
+      .horarios-grid { grid-template-columns: 1fr; }
+      .horario-closed { grid-column: span 1; }
+      .planes-grid { grid-template-columns: repeat(2, 1fr); }
+      .cycling-band { height: 420px; }
+      .cycling-band-content { padding: 0 24px; }
+
+      .footer-main { grid-template-columns: 1fr; gap: 36px; padding: 48px 24px 32px; }
+      .footer-bottom { padding: 20px 24px; flex-direction: column; align-items: flex-start; gap: 8px; }
+    }
+
+    @media (max-width: 600px) {
+      .clases-grid { grid-template-columns: 1fr; }
+      .planes-grid { grid-template-columns: 1fr; }
+      .hero-ctas { flex-direction: column; width: 100%; }
+      .btn-hero-primary, .btn-hero-secondary { width: 100%; justify-content: center; }
+      .cta-actions { flex-direction: column; width: 100%; }
+      .btn-cta-primary, .btn-cta-wa { width: 100%; justify-content: center; }
+
+      /* Stats row: wrap into 2×2 grid and hide dividers */
+      .hero-stats { flex-wrap: wrap; gap: 16px 28px; justify-content: center; }
+      .stat-divider { display: none; }
+      .stat { text-align: center; min-width: 80px; }
+    }
+
+    @media (max-width: 480px) {
+      /* Nav: tighter padding */
+      nav { padding: 12px 16px; }
+      .btn-nav-login { padding: 8px 16px; font-size: 12px; letter-spacing: 0.5px; }
+
+      /* Hero: reduce padding and sub letter-spacing */
+      .hero { padding: 72px 16px 48px; }
+      .hero-headline { font-size: clamp(34px, 9vw, 44px); }
+      .hero-sub { font-size: 11px; letter-spacing: 2px; }
+      .hero-desc { font-size: 14px; }
+      .hero-ctas { gap: 10px; }
+
+      /* Sections: tighter side padding */
+      section { padding: 56px 16px; }
+      .cycling-band-content { padding: 0 16px; }
+      .cycling-band { height: 340px; }
+      .cycling-band-title { font-size: clamp(32px, 9vw, 48px); }
+
+      /* Footer */
+      .footer-main { padding: 36px 16px 24px; gap: 28px; }
+      .footer-bottom { padding: 16px; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- ── NAV ── -->
+<nav>
+  <a href="#" class="nav-logo">
+    <img src="img/logo_solo.png" alt="Thor Training">
+    <div class="nav-wordmark">
+      <div class="nav-thor">THOR</div>
+      <div class="nav-training">TRAINING</div>
+    </div>
+  </a>
+  <div class="nav-actions">
+    <a href="https://wa.me/573202219103" target="_blank" class="btn-nav-wa">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      WhatsApp
+    </a>
+    <a href="app.html" class="btn-nav-login">Iniciar sesión</a>
+  </div>
+</nav>
+
+<!-- ── HERO ── -->
+<div class="hero">
+  <div class="hero-bg"></div>
+  <div class="hero-grid"></div>
+
+  <div class="hero-inner">
+
+    <!-- Contenido izquierdo -->
+    <div class="hero-content">
+      <div class="hero-badge">El Búnker de la Fuerza</div>
+
+      <h1 class="hero-headline">
+        <span>El búnker</span><br>de la fuerza
+      </h1>
+      <p class="hero-sub">Método · Disciplina · Resultados</p>
+
+      <p class="hero-desc">
+        Construimos personas más fuertes por dentro y por fuera.
+        Entrenamiento 100% guiado, comunidad real, resultados que se sienten.
+      </p>
+
+      <div class="hero-ctas">
+        <a href="app.html" class="btn-hero-primary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 9-10h-7l2-10z"/></svg>
+          Acceder a la plataforma
+        </a>
+        <a href="https://wa.me/573202219103" target="_blank" class="btn-hero-secondary">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          Clase de cortesía
+        </a>
+      </div>
+
+      <div class="hero-stats">
+        <div class="stat">
+          <div class="stat-num">2K+</div>
+          <div class="stat-label">Seguidores</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">100%</div>
+          <div class="stat-label">Guiado</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">4</div>
+          <div class="stat-label">Disciplinas</div>
+        </div>
+        <div class="stat-divider"></div>
+        <div class="stat">
+          <div class="stat-num">0</div>
+          <div class="stat-label">Permanencia</div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Carrusel derecho -->
+    <div class="hero-visual">
+      <div class="hero-img-wrap">
+        <div class="hero-carousel">
+          <div class="hero-slide active" data-label="Pilates · Thor Training">
+            <img src="img/carrusel_1.png" alt="Pilates Thor Training">
+          </div>
+          <div class="hero-slide" data-label="Cycling · Thor Training">
+            <img src="img/carrusel_2.png" alt="Cycling Thor Training">
+          </div>
+          <div class="hero-slide" data-label="Cycling · Thor Training">
+            <img src="img/carrusel_3.png" alt="Cycling Thor Training">
+          </div>
+          <div class="hero-slide" data-label="Familia · Thor Training">
+            <img src="img/carrusel_4.JPG" alt="Familia Thor Training">
+          </div>
+        </div>
+      </div>
+
+      <button class="hero-arrow hero-arrow-prev" onclick="heroPrev()" aria-label="Anterior">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="15 18 9 12 15 6"/></svg>
+      </button>
+      <button class="hero-arrow hero-arrow-next" onclick="heroNext()" aria-label="Siguiente">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="9 18 15 12 9 6"/></svg>
+      </button>
+
+      <div class="hero-dots">
+        <button class="hero-dot active" onclick="heroGoTo(0)" aria-label="Imagen 1"></button>
+        <button class="hero-dot" onclick="heroGoTo(1)" aria-label="Imagen 2"></button>
+        <button class="hero-dot" onclick="heroGoTo(2)" aria-label="Imagen 3"></button>
+        <button class="hero-dot" onclick="heroGoTo(3)" aria-label="Imagen 4"></button>
+      </div>
+
+      <div class="hero-img-tag" id="hero-img-tag">Pilates · Thor Training</div>
+    </div>
+
+  </div>
+</div>
+
+<!-- ── PROPÓSITO ── -->
+<section class="purpose-section" id="nosotros">
+  <div class="purpose-grid">
+    <div>
+      <div class="section-label">Quiénes somos</div>
+      <h2 class="section-title">Más que un<br>gimnasio</h2>
+      <p class="section-desc">
+        Acompañamos a cada persona con entrenamiento guiado, atención genuina y una comunidad que abraza desde el primer día. Sabemos tu nombre, celebramos tu proceso y creamos momentos que conectan — porque en Thor Training las personas se vuelven amigas y los amigos se vuelven familia.
+      </p>
+    </div>
+    <div class="purpose-cards">
+      <div class="purpose-card">
+        <div class="purpose-card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>
+        </div>
+        <div class="purpose-card-title">Propósito</div>
+        <div class="purpose-card-text">"Construir personas más fuertes por dentro y por fuera."</div>
+      </div>
+      <div class="purpose-card">
+        <div class="purpose-card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+        </div>
+        <div class="purpose-card-title">Misión</div>
+        <div class="purpose-card-text">Entrenamiento guiado, atención genuina y comunidad real desde el primer día.</div>
+      </div>
+      <div class="purpose-card">
+        <div class="purpose-card-icon">
+          <svg width="28" height="28" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polyline points="23 6 13.5 15.5 8.5 10.5 1 18"/><polyline points="17 6 23 6 23 12"/></svg>
+        </div>
+        <div class="purpose-card-title">Visión</div>
+        <div class="purpose-card-text">Ser la marca que demostró que un gimnasio puede cambiar la vida — no solo el cuerpo.</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CLASES ── -->
+<section class="clases-section" id="clases">
+  <div class="clases-header">
+    <div>
+      <div class="section-label">Disciplinas</div>
+      <h2 class="section-title">Nuestras clases</h2>
+    </div>
+    <p class="section-desc" style="max-width: 320px;">
+      Todas las clases son 100% guiadas por instructores especializados. Reserva tu cupo y empieza hoy.
+    </p>
+  </div>
+  <div class="clases-grid">
+    <div class="clase-card">
+      <span class="clase-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="5.5" cy="17.5" r="3.5"/><circle cx="18.5" cy="17.5" r="3.5"/><path d="M15 6a1 1 0 1 0 0-2 1 1 0 0 0 0 2zm-3 11.5L9 11l4-3 3 5.5"/><path d="M5.5 17.5 9 11l2.5 1.5"/></svg>
+      </span>
+      <div class="clase-name">Cycling</div>
+      <div class="clase-desc">Alta intensidad en bicicleta estática. Quema calorías, mejora tu resistencia cardiovascular y vive la experiencia en grupo.</div>
+    </div>
+    <div class="clase-card">
+      <span class="clase-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><polygon points="12 2 19 6 19 18 12 22 5 18 5 6"/><path d="M13 9l-2 4h3l-2 4"/></svg>
+      </span>
+      <div class="clase-name">Combat</div>
+      <div class="clase-desc">Descarga energía con técnicas de artes marciales y boxeo. Fuerza, agilidad y diversión en cada golpe.</div>
+    </div>
+    <div class="clase-card">
+      <span class="clase-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="5" r="2"/><line x1="12" y1="7" x2="12" y2="14"/><line x1="7" y1="10" x2="17" y2="10"/><line x1="12" y1="14" x2="8" y2="20"/><line x1="12" y1="14" x2="16" y2="20"/></svg>
+      </span>
+      <div class="clase-name">Pilates</div>
+      <div class="clase-desc">Control, fuerza profunda y flexibilidad. Clases con cupo limitado para una atención personalizada.</div>
+    </div>
+    <div class="clase-card">
+      <span class="clase-icon">
+        <svg width="32" height="32" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><line x1="3" y1="12" x2="21" y2="12"/><path d="M5 8v8M7 9v6M17 9v6M19 8v8"/></svg>
+      </span>
+      <div class="clase-name">Funcional</div>
+      <div class="clase-desc">Entrena movimientos naturales del cuerpo para ganar fuerza real y rendimiento en tu día a día.</div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CYCLING BAND ── -->
+<div class="cycling-band">
+  <div class="cycling-band-img"></div>
+  <div class="cycling-band-overlay"></div>
+  <div class="cycling-band-content">
+    <div class="cycling-band-label">Cycling · Thor Training</div>
+    <h2 class="cycling-band-title">
+      Siente la<br><span>intensidad</span>
+    </h2>
+    <p class="cycling-band-sub">
+      Alta intensidad, música, comunidad y energía pura.<br>
+      Cupos limitados — reserva el tuyo y vive la experiencia.
+    </p>
+    <a href="https://wa.me/573202219103" target="_blank" class="btn-cycling">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+      Reservar cupo
+    </a>
+  </div>
+</div>
+
+<!-- ── HORARIOS ── -->
+<section class="horarios-section" id="horarios">
+  <div class="section-label">Horarios</div>
+  <h2 class="section-title">Siempre abiertos<br>para ti</h2>
+  <div class="horarios-grid">
+    <div class="horario-card">
+      <div class="horario-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="horario-days">Lunes a Jueves</div>
+        <div class="horario-time">5AM – 9PM</div>
+        <div class="horario-note">Clases programadas todo el día</div>
+      </div>
+    </div>
+    <div class="horario-card">
+      <div class="horario-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+      </div>
+      <div>
+        <div class="horario-days">Viernes</div>
+        <div class="horario-time">5AM – 8PM</div>
+        <div class="horario-note">Clases programadas todo el día</div>
+      </div>
+    </div>
+    <div class="horario-card">
+      <div class="horario-icon">
+        <svg width="36" height="36" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></svg>
+      </div>
+      <div>
+        <div class="horario-days">Sábados</div>
+        <div class="horario-time">8AM – 11AM</div>
+        <div class="horario-note">Media mañana de entrenamiento</div>
+      </div>
+    </div>
+    <div class="horario-closed">
+      <div style="color: var(--muted2);">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
+      </div>
+      <div>
+        <div style="font-size: 13px; font-weight: 600;">Domingos y festivos</div>
+        <div class="horario-closed-label">Descansa, recarga y vuelve con todo el lunes</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── PLANES ── -->
+<section class="planes-section" id="planes">
+  <div class="planes-header">
+    <div class="section-label">Planes 2026</div>
+    <h2 class="section-title">Elige tu membresía</h2>
+    <p class="section-desc" style="margin-top: 8px;">Sin cláusula de permanencia. Cancela cuando quieras.</p>
+  </div>
+  <div class="planes-grid">
+    <div class="plan-card">
+      <div class="plan-name">Individual / Día</div>
+      <div class="plan-price">$20.000</div>
+      <div class="plan-period">por sesión</div>
+      <div class="plan-desc">
+        <span class="plan-check">✓</span> Acceso por un día<br>
+        <span class="plan-check">✓</span> Todas las clases disponibles
+      </div>
+    </div>
+    <div class="plan-card featured">
+      <div class="plan-badge">Más popular</div>
+      <div class="plan-name">Full</div>
+      <div class="plan-price">$150.000</div>
+      <div class="plan-period">por mes</div>
+      <div class="plan-desc">
+        <span class="plan-check">✓</span> Acceso a todas las clases<br>
+        <span class="plan-check">✓</span> Según programación mensual
+      </div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Full + Pilates</div>
+      <div class="plan-price">$180.000</div>
+      <div class="plan-period">por mes</div>
+      <div class="plan-desc">
+        <span class="plan-check">✓</span> Acceso a todas las clases<br>
+        <span class="plan-check">✓</span> 2 clases de Pilates incluidas
+      </div>
+    </div>
+    <div class="plan-card">
+      <div class="plan-name">Estudiantil</div>
+      <div class="plan-price">$120.000</div>
+      <div class="plan-period">por mes</div>
+      <div class="plan-desc">
+        <span class="plan-check">✓</span> Todas las clases programadas<br>
+        <span class="plan-check">✓</span> Tarifa especial estudiantes
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ── CTA FINAL ── -->
+<section class="cta-section">
+  <div class="cta-bg"></div>
+  <div class="cta-content">
+    <p class="section-label">Únete hoy</p>
+    <h2 class="cta-title">
+      Vive la<br><span>experiencia</span>
+    </h2>
+    <p class="cta-sub">#ElBúnkerDeLaFuerza · Diagonal 29 # 34A sur - 26, Envigado</p>
+    <div class="cta-actions">
+      <a href="app.html" class="btn-cta-primary">
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M13 2L4 13h7l-1 9 9-10h-7l2-10z"/></svg>
+        Acceder a la plataforma
+      </a>
+      <a href="https://wa.me/573202219103" target="_blank" class="btn-cta-wa">
+        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        Escribir por WhatsApp
+      </a>
+    </div>
+  </div>
+</section>
+
+<!-- ── FOOTER ── -->
+<footer>
+  <div class="footer-main">
+
+    <!-- Col 1: Brand -->
+    <div class="footer-col-brand" style="text-align:center;">
+      <a href="#" class="footer-logo-row" style="justify-content:center;">
+        <img src="img/logo_completo.jpg" alt="Thor Training" style="height:72px;width:auto;border-radius:8px;">
+      </a>
+      <p class="footer-tagline">El Búnker de la Fuerza. Entrenamiento guiado, comunidad real y resultados que se sienten en Envigado, Colombia.</p>
+      <div class="footer-social" style="justify-content:center;">
+        <a href="https://www.instagram.com/thortraining.cali" target="_blank" class="footer-social-link" aria-label="Instagram Thor Training">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><rect x="2" y="2" width="20" height="20" rx="5" ry="5"/><path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/><line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/></svg>
+        </a>
+        <a href="https://wa.me/573202219103" target="_blank" class="footer-social-link" aria-label="WhatsApp Thor Training">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <!-- Col 2: Nav -->
+    <div class="footer-col-nav">
+      <div class="footer-nav-title">Navegación</div>
+      <ul class="footer-nav-list">
+        <li><a href="#">Inicio</a></li>
+        <li><a href="#nosotros">Quiénes Somos</a></li>
+        <li><a href="#clases">Nuestras Clases</a></li>
+        <li><a href="#horarios">Horarios</a></li>
+        <li><a href="#planes">Planes</a></li>
+        <li><a href="app.html">Iniciar Sesión</a></li>
+      </ul>
+    </div>
+
+    <!-- Col 3: Contact + Map -->
+    <div class="footer-col-contact">
+      <div class="footer-contact-title">Contacto</div>
+      <div class="footer-contact-list">
+        <div class="footer-contact-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
+          <span>Diagonal 29 # 34A sur - 26, Envigado, Antioquia</span>
+        </div>
+        <div class="footer-contact-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 01-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 01-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 012.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0012.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 005.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 00-3.48-8.413z"/></svg>
+          <a href="https://wa.me/573202219103">+57 320 221 9103</a>
+        </div>
+        <div class="footer-contact-item">
+          <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
+          <span>Lun–Jue 5AM–9PM · Vie 5AM–8PM · Sáb 8AM–11AM</span>
+        </div>
+      </div>
+      <div class="footer-map">
+        <iframe
+          src="https://maps.google.com/maps?q=Diagonal+29+%2334A+sur+26+Envigado+Antioquia+Colombia&hl=es&z=16&output=embed"
+          loading="lazy"
+          title="Thor Training ubicación en Envigado"
+          allowfullscreen
+          referrerpolicy="no-referrer-when-downgrade">
+        </iframe>
+      </div>
+    </div>
+
+  </div>
+
+  <div class="footer-bottom">
+    <div class="footer-copy">© 2026 Thor Training Gimnasio. Todos los derechos reservados.</div>
+    <div class="footer-credit">Hecho por 🦁 AR Software Lab</div>
+  </div>
+</footer>
+
+<script>
+(function () {
+  const slides = document.querySelectorAll('.hero-slide');
+  const dots   = document.querySelectorAll('.hero-dot');
+  const tag    = document.getElementById('hero-img-tag');
+  let cur   = 0;
+  let timer = setInterval(advance, 4000);
+
+  function goTo(n) {
+    slides[cur]?.classList.remove('active');
+    dots[cur]?.classList.remove('active');
+    cur = ((n % slides.length) + slides.length) % slides.length;
+    slides[cur]?.classList.add('active');
+    dots[cur]?.classList.add('active');
+    if (tag) tag.textContent = slides[cur]?.dataset.label || '';
+  }
+
+  function advance() { goTo(cur + 1); }
+
+  window.heroGoTo = function (n) { clearInterval(timer); goTo(n); timer = setInterval(advance, 4000); };
+  window.heroNext = function ()  { clearInterval(timer); goTo(cur + 1); timer = setInterval(advance, 4000); };
+  window.heroPrev = function ()  { clearInterval(timer); goTo(cur - 1); timer = setInterval(advance, 4000); };
+}());
+</script>
+</body>
+</html>
