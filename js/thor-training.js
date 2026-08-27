@@ -10297,8 +10297,10 @@ async function _generatePaymentReceiptPDF(d) {
     y -= 24;
   });
 
-  page.drawText('Thor Training · La Catedral de la Fuerza',                { x: 40, y: 28, size: 9, font, color: gray });
-  page.drawText('Diagonal 29 # 34A sur - 26, Envigado · thortraininggym.club', { x: 40, y: 16, size: 8, font, color: gray });
+  page.drawText('¡Gracias por hacer parte de Thor Training!',              { x: 40, y: 46, size: 9, font: fontBold, color: cyan });
+  page.drawText('Thor Training · El Búnker de la Fuerza',                  { x: 40, y: 34, size: 9, font, color: gray });
+  page.drawText('Diagonal 29 # 34A sur - 26, Envigado · thortraininggym.club', { x: 40, y: 22, size: 8, font, color: gray });
+  page.drawText('infothortraining@gmail.com',                              { x: 40, y: 10, size: 8, font, color: gray });
 
   return pdfDoc.save();
 }
