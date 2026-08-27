@@ -3197,12 +3197,18 @@
   <div class="modal" style="max-width:460px;width:94vw;">
     <div class="modal-title">REGISTRAR PAGO</div>
     <div style="font-size:13px;color:var(--muted);margin-bottom:16px;">
-      <span id="rp-usuario-nombre" style="color:var(--text);font-weight:600;"></span> — la vigencia se calcula desde hoy, sin importar la fecha de vencimiento anterior.
+      <span id="rp-usuario-nombre" style="color:var(--text);font-weight:600;"></span> — si paga antes de vencerse, la vigencia se suma sobre lo que le queda; si ya venció, cuenta desde hoy.
     </div>
 
     <div class="form-group">
       <label class="form-label">Plan <span style="color:var(--red);">*</span></label>
       <select class="form-input" id="rp-plan" onchange="_rpPlanChanged()"></select>
+    </div>
+
+    <div class="form-group">
+      <label class="form-label">Vigencia desde <span style="color:var(--red);">*</span></label>
+      <input class="form-input" type="date" id="rp-vigencia-desde">
+      <div style="font-size:11px;color:var(--muted2);margin-top:4px;">Calculada automáticamente — cámbiala solo para casos especiales (pausas acordadas, correcciones).</div>
     </div>
 
     <div class="form-group">

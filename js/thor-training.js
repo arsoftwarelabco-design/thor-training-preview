@@ -10396,6 +10396,14 @@ async function abrirModalRegistrarPago() {
   if (fileInp) fileInp.value = '';
   document.getElementById('rp-transferencia-fields').style.display = 'none';
 
+  // Precarga la misma regla que aplica el servidor (si aún no venció, suma sobre lo
+  // que le queda; si ya venció, cuenta desde hoy) — el admin puede cambiarla a mano
+  // para casos especiales. Pedido de María Paulina, 2026-08-27: antes no se podía
+  // elegir la fecha y un pago adelantado le comía los días que le quedaban.
+  const today = _bogotaToday();
+  const vigenciaDesde = (user.endDateRaw && user.endDateRaw > today) ? user.endDateRaw : today;
+  document.getElementById('rp-vigencia-desde').value = vigenciaDesde;
+
   const planSel = document.getElementById('rp-plan');
   const plans   = (_udpPlansCache || []).filter(p => p.is_active !== false);
   if (!plans.length) { toast('Sin planes', 'No hay planes activos configurados'); return; }
@@ -10427,14 +10435,16 @@ async function registrarPagoManual() {
   const errEl = document.getElementById('rp-error');
   errEl.textContent = '';
 
-  const planId      = document.getElementById('rp-plan').value;
-  const monto       = parseFloat(document.getElementById('rp-monto').value);
-  const metodo      = document.getElementById('rp-metodo').value;
-  const transaccion = (document.getElementById('rp-transaccion').value || '').trim();
-  const fileInp     = document.getElementById('rp-comprobante');
-  const file        = fileInp?.files?.[0] || null;
+  const planId         = document.getElementById('rp-plan').value;
+  const vigenciaDesde  = document.getElementById('rp-vigencia-desde').value;
+  const monto          = parseFloat(document.getElementById('rp-monto').value);
+  const metodo         = document.getElementById('rp-metodo').value;
+  const transaccion    = (document.getElementById('rp-transaccion').value || '').trim();
+  const fileInp        = document.getElementById('rp-comprobante');
+  const file           = fileInp?.files?.[0] || null;
 
   if (!planId)               { errEl.textContent = 'Selecciona un plan'; return; }
+  if (!vigenciaDesde)        { errEl.textContent = 'Selecciona la fecha de inicio de vigencia'; return; }
   if (!monto || monto <= 0)  { errEl.textContent = 'Ingresa un monto válido'; return; }
   if (metodo === 'transferencia') {
     if (!transaccion) { errEl.textContent = 'Ingresa el número de transacción'; return; }
@@ -10463,6 +10473,7 @@ async function registrarPagoManual() {
       p_transaction_number: metodo === 'transferencia' ? transaccion : null,
       p_receipt_photo_url:  receiptPhotoUrl,
       p_membership_id:      user.membershipId || null,
+      p_period_start:       vigenciaDesde,
     });
     if (error) throw error;
 
@@ -10491,7 +10502,7 @@ async function registrarPagoManual() {
       membershipId:              result?.membership_id || user.membershipId,
       membershipPlanId:          planId,
       planName:                  plan?.name || user.planName,
-      startDate:                 _bogotaToday(),
+      startDate:                 vigenciaDesde,
       endDateRaw:                newEndRaw,
       endDateStr:                newEndStr,
       pilatesClassesIncluded:    plan?.pilates_classes    || 0,
